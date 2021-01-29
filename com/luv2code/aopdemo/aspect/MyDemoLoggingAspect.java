@@ -1,0 +1,44 @@
+package com.luv2code.aopdemo.aspect;
+
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.reflect.MethodSignature;
+import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
+
+import com.luv2code.aopdemo.Account;
+
+@Aspect
+@Component
+@Order(2)
+public class MyDemoLoggingAspect {
+	
+	@Before("com.luv2code.aopdemo.aspect.LuvAopExpressions.forDaoPackageNoGetterSetter()")
+	public void beforeAddAccountAdvice(JoinPoint theJoinPoint) {
+		System.out.println("\n==========>> Executing @Before advice on method");
+		
+		// Display the method signature
+		MethodSignature methodSig = (MethodSignature) theJoinPoint.getSignature();
+		System.out.println("Method: " + methodSig);
+		
+		// Display the method arguments
+		
+		
+		//Get arguments
+		Object[] args = theJoinPoint.getArgs();
+		
+		// Loop trough arguments
+		for (Object tempArg : args) {
+			System.out.println("Argument: " + tempArg);
+			
+			if(tempArg instanceof Account) {
+				// Cast and print Account specific stuff
+				Account theAccount = (Account) tempArg;
+				System.out.println("Account name: " + theAccount.getName());
+				System.out.println("Account level: " + theAccount.getLevel());
+			}
+		}
+	}
+}
